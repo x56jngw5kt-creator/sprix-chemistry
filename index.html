@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPRIX Chemistry</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+<header class="bar">
+ <button class="menu" onclick="toggleSide()">☰</button>
+ <div class="brand"><img src="assets/sprix-emblem.jpg"><div><strong>SPRIX</strong><span>Chemistry</span></div></div>
+ <div class="bar-right"><span class="status">● متصل</span><button onclick="showMap()">الخريطة</button></div>
+</header>
+
+<aside id="side">
+ <div class="side-brand"><img src="assets/sprix-emblem.jpg"><b>SPRIX Chemistry</b></div>
+ <button onclick="showMap()">🧭 خريطة التعلم</button>
+ <button onclick="showLab()">🧪 المختبر</button>
+ <button onclick="showGame()">🎮 ساحة اللعب</button>
+ <button onclick="showTalk()">💬 نقاش الشخصيات</button>
+ <div class="side-note">منهج الكيمياء<br>البكالوريا المصرية<br>الصف الثاني الثانوي</div>
+</aside>
+
+<main id="screen"></main>
+</div>
+<script src="app.js"></script>
+</body></html>
