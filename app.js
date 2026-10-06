@@ -83,7 +83,105 @@ function askKimchi(){
 
 function data(){const i=current.unit*13+current.lesson;return focus[i]||["الكيمياء","مفهوم أساسي في الدرس","استكشف"]}
 function renderLesson(){const title=current.unit?lessons2[current.lesson]:lessons[current.lesson],d=data(),step=current.step;screen().innerHTML=`<section class="view"><button class="back" onclick="showMap()">← خريطة التعلم</button><div class="room"><div class="room-head"><small>الفصل ${current.unit+1} • الدرس ${current.lesson+1}</small><h1>${title}</h1><div class="progress"><span style="width:${(step+1)/4*100}%"></span></div></div><div class="room-body"><div class="stage"><div class="panel">${lessonStage(step,title,d)}</div><aside class="panel"><h3>الشخصيات</h3><div class="chars">${dialogue(step,title,d)}</div></aside></div><div class="room-actions"><button class="primary outline" onclick="showMap()">خروج</button><button class="primary pink" onclick="${step<3?"nextStep()":"finishLesson()"}">${step<3?"تابع →":"أنهِ الدرس ✓"}</button></div></div></div></section>`}
-function lessonStage(step,title,d){if(step===0)return `<span class="eyebrow">1 • سؤال توجيهي</span><h2>${d[1]}</h2><div class="concept">ابدأ بالملاحظة: ما الذي تراه في الظاهرة؟ وما الذي تتوقع أن يحدث إذا غيّرنا أحد العوامل؟</div><button class="primary" onclick="nextStep()">أريد الاستكشاف</button>`;if(step===1)return `<span class="eyebrow">2 • الاستكشاف</span><h2>مختبر صغير</h2><p>حرّك المؤشر وشاهد كيف تتغير النتيجة. الفكرة هنا هي ربط الملاحظة بالنموذج العلمي.</p><input class="slider" type="range" min="0" max="100" value="45" oninput="document.getElementById('liquid').style.height=(20+this.value/2)+'%'"><div class="beaker"><div id="liquid" class="liquid"></div></div>`;if(step===2)return `<span class="eyebrow">3 • الشرح والحوار</span><h2>الفكرة العلمية</h2><div class="concept"><b>${d[0]}</b><br>${d[1]}.</div><p>طبّق الفكرة في موقف جديد، ثم ناقش السبب مع الشخصيات قبل الانتقال للتدريب.</p>`;return `<span class="eyebrow">4 • حاول بنفسك</span><h2>تحدي الدرس</h2><p>اختر أفضل تفسير للموقف. لا يوجد وقت محدد؛ الهدف هو التفكير العلمي.</p><button class="choice" onclick="this.textContent='✓ اختيار جيد — تابع التفكير في الدليل.'">أبحث عن الدليل قبل الحكم</button><button class="choice" onclick="this.textContent='جرّب ربط الإجابة بالمفهوم الأساسي.'">أختار الإجابة الأسرع</button>`}
+function lessonStage(step,title,d){
+  if(step===0)return `<span class="eyebrow">1 • سؤال توجيهي</span><h2>${d[1]}</h2><div class="concept">ابدأ بالملاحظة: ما الذي تراه في الظاهرة؟ وما الذي تتوقع أن يحدث إذا غيّرنا أحد العوامل؟</div><button class="primary" onclick="nextStep()">أريد الاستكشاف</button>`;
+  if(step===1)return `<span class="eyebrow">2 • الاستكشاف</span>${experimentHTML(current.unit*13+current.lesson)}`;
+  if(step===2)return `<span class="eyebrow">3 • الشرح والحوار</span><h2>الفكرة العلمية</h2><div class="concept"><b>${d[0]}</b><br>${d[1]}.</div><p>طبّق الفكرة في موقف جديد، ثم ناقش السبب مع الشخصيات قبل الانتقال للتدريب.</p>`;
+  return `<span class="eyebrow">4 • حاول بنفسك</span><h2>تحدي الدرس</h2><p>اختر أفضل تفسير للموقف. لا يوجد وقت محدد؛ الهدف هو التفكير العلمي.</p><button class="choice" onclick="this.textContent='✓ اختيار جيد — تابع التفكير في الدليل.'">أبحث عن الدليل قبل الحكم</button><button class="choice" onclick="this.textContent='جرّب ربط الإجابة بالمفهوم الأساسي.'">أختار الإجابة الأسرع</button>`;
+}
+
+const experiments=[
+["تغيّر الحالة","غيّر الطاقة الحرارية","حرّك درجة الحرارة وشاهد انتقال المادة بين الصلب والسائل والغاز.","expTemp"],
+["اتزان السائل والبخار","التبخر والتكثف","زد درجة الحرارة ولاحظ كيف يتغير معدل التبخر وضغط البخار.","expVapor"],
+["مخطط الطور","مستكشف مخطط الطور","حرّك الضغط ودرجة الحرارة وحدد المنطقة التي تقع فيها المادة.","expPhase"],
+["قوانين الغازات","تجربة بويل وشارل","غيّر متغيرًا واحدًا ولاحظ العلاقة بين الضغط والحجم ودرجة الحرارة.","expGas"],
+["معادلة الغاز المثالي","حجرة الغاز المثالي","اضبط P وV وT واحسب كمية المادة من العلاقة بين المتغيرات.","expIdeal"],
+["الضغط الكلي والضغط الجزئي","خلط غازين","أضف غازات إلى الوعاء ولاحظ كيف يتكون الضغط الكلي من الضغوط الجزئية.","expPartial"],
+["الغاز المثالي والغاز الحقيقي","مقارنة الغازين","غيّر الضغط ودرجة الحرارة وشاهد متى يبتعد السلوك الحقيقي عن النموذج المثالي.","expRealGas"],
+["خصائص المحاليل","صنع محلول","غيّر كمية المذاب وشاهد أثرها في تركيز المحلول.","expSolution"],
+["ارتفاع درجة الغليان وانخفاض درجة التجمد","مقارنة الماء والمحلول","أضف جسيمات مذاب ولاحظ اتجاه درجتي الغليان والتجمد.","expColligative"],
+["الضغط الأسموزي","غشاء شبه منفذ","شاهد انتقال المذيب عبر الغشاء مع اختلاف التركيز.","expOsmosis"],
+["الغرويات","تأثير تشتت الضوء","قارن محلولًا حقيقيًا وغرويًا ومعلقًا باستخدام شعاع ضوئي.","expColloid"],
+["بنية البلورات الفلزية","بناء شبكة فلزية","غيّر ترتيب الذرات في شبكة فلزية ولاحظ عدد التناسق.","expMetalCrystal"],
+["بنية البلورات الأيونية","شبكة أيونية ثلاثية الأبعاد","كوّن شبكة من أيونات موجبة وسالبة وشاهد نمط الترتيب.","expIonicCrystal"],
+["التفاعلات الكيميائية وتغيرات الإنثالبي","مسعر افتراضي","راقب تغير درجة الحرارة عند اختيار تفاعل طارد أو ماص.","expEnthalpy"],
+["قانون هس","بناء مسار التفاعل","اجمع خطوات تفاعلية مختلفة للوصول إلى التغير الكلي في الإنثالبي.","expHess"],
+["الخلية الكهروكيميائية (1) – خلية دانيال","بناء خلية دانيال","اختر قطبي الخلية والجسر الملحي وشاهد اتجاه انتقال الإلكترونات.","expDaniel"],
+["الخلية الكهروكيميائية (2) – خلايا متنوعة","مقارنة الخلايا","بدّل نوعي الخلية وقارن اتجاه التفاعل والقوة الدافعة الافتراضية.","expCells"],
+["التفاعلات عند الأقطاب الكهربائية (1)","تتبع الأكسدة والاختزال","حدد الأنود والكاثود وتتبع الإلكترونات في الخلية.","expElectrodes"],
+["التحليل الكهربائي (2) – كمية الكهرباء، خليتان تحليليتان","التحليل الكهربائي","غيّر شدة التيار والزمن وشاهد أثر كمية الكهرباء على الناتج.","expElectrolysis"],
+["سرعة التفاعل","منحنى سرعة التفاعل","شغّل التفاعل وشاهد كيف تتغير كمية المتفاعل مع الزمن.","expRate"],
+["العوامل المؤثرة في سرعة التفاعل","مختبر العوامل","قارن تأثير التركيز ودرجة الحرارة ومساحة السطح والعامل الحفاز.","expRateFactors"],
+["الاتزان الكيميائي","الوصول إلى الاتزان","شغّل التفاعل العكسي وتابع تغير تراكيز المتفاعلات والنواتج.","expEquilibrium"],
+["مبدأ لوشاتيليه","أزعج الاتزان","غيّر التركيز أو الضغط وشاهد اتجاه استجابة النظام.","expLeChatelier"],
+["الاتزان الأيوني","تأين حمض ضعيف","غيّر التركيز وشاهد تغير نسبة التأين وكمية الأيونات.","expIonic"],
+["الأملاح والمحاليل المائية","ذوبان الملح في الماء","اختر ملحًا وشاهد سلوك الأيونات عند الذوبان وتأثير الوسط.","expSalt"],
+["حاصل الإذابة","الذوبان والترسيب","غيّر تراكيز الأيونات وشاهد متى يتوقع بدء الترسيب.","expKsp"]
+];
+
+function experimentHTML(i){
+  const e=experiments[i]||experiments[0];
+  return `<div class="experiment-card"><div class="experiment-top"><div><h2>🧪 ${e[0]}</h2><p>${e[2]}</p></div><span class="experiment-tag">تجربة مختلفة لهذا الدرس</span></div><div id="experimentArea" class="experiment-area">${experimentBody(e[3])}</div><div id="experimentResult" class="concept">ابدأ بالتجربة وسجّل ما تلاحظه.</div></div>`;
+}
+function experimentBody(type){
+  const S=(label,extra="")=>`<label class="exp-control"><b>${label}</b><input class="slider" type="range" min="0" max="100" value="50" oninput="${type}(this.value)"><small id="expValue">${extra}</small></label>`;
+  if(type==="expTemp")return `${S("الطاقة الحرارية","25°C")}<div class="exp-tank"><div id="expFill" class="exp-steam"></div></div>`;
+  if(type==="expVapor")return `${S("درجة الحرارة","25°C")}<div class="particle-box"><span>💧</span><span>💧</span><span>💧</span><span>💨</span></div>`;
+  if(type==="expPhase")return `${S("الضغط","50%")} ${S("درجة الحرارة","50%")}<div class="phase-map"><b>صلب</b><b>سائل</b><b>غاز</b></div>`;
+  if(type==="expGas")return `${S("حجم الوعاء","50%")} ${S("درجة الحرارة","50%")}<div class="piston"><div></div><div class="gasDots">● ● ● ● ●</div></div>`;
+  if(type==="expIdeal")return `${S("الضغط P","50")} ${S("الحجم V","50")} ${S("درجة الحرارة T","50")}<div class="formula-box">PV = nRT<br><strong id="idealOut">n ≈ 0.50</strong></div>`;
+  if(type==="expPartial")return `<div class="button-row"><button class="primary outline" onclick="expPartial(1)">أضف غاز A</button><button class="primary pink" onclick="expPartial(2)">أضف غاز B</button></div><div class="gas-chamber"><span id="gasA">A: 0</span><span id="gasB">B: 0</span></div>`;
+  if(type==="expRealGas")return `${S("الضغط","20%")} ${S("درجة الحرارة","70%")}<div class="deviation-meter"><div id="devFill"></div></div>`;
+  if(type==="expSolution")return `${S("كمية المذاب","50%")}<div class="solution-beaker"><div id="solFill"></div><span id="soluteDots">••••</span></div>`;
+  if(type==="expColligative")return `${S("عدد جسيمات المذاب","30%")}<div class="two-meters"><div>الغليان <b id="boilOut">100°C</b></div><div>التجمد <b id="freezeOut">0°C</b></div></div>`;
+  if(type==="expOsmosis")return `${S("فرق التركيز","50%")}<div class="osmosis-box"><div>💧💧💧</div><div class="membrane"></div><div>💧</div></div>`;
+  if(type==="expColloid")return `<div class="button-row"><button class="choice" onclick="expColloid('محلول حقيقي')">محلول حقيقي</button><button class="choice" onclick="expColloid('غروي')">غروي</button><button class="choice" onclick="expColloid('معلق')">معلق</button></div><div class="light-beam">↘ ───────── 🔦</div>`;
+  if(type==="expMetalCrystal")return `${S("حجم الشبكة","50%")}<div id="metalGrid" class="crystal-grid"></div>`;
+  if(type==="expIonicCrystal")return `<div class="button-row"><button class="primary outline" onclick="expIonicCrystal('NaCl')">NaCl</button><button class="primary pink" onclick="expIonicCrystal('MgO')">MgO</button></div><div id="ionicGrid" class="ionic-grid"></div>`;
+  if(type==="expEnthalpy")return `<div class="button-row"><button class="primary pink" onclick="expEnthalpy('طارد')">تفاعل طارد</button><button class="primary outline" onclick="expEnthalpy('ماص')">تفاعل ماص</button></div><div class="thermometer"><div id="thermoFill"></div></div>`;
+  if(type==="expHess")return `<div class="button-row"><button class="choice" onclick="expHess(25)">أضف +25 kJ</button><button class="choice" onclick="expHess(-10)">أضف −10 kJ</button><button class="choice" onclick="expHess(-15)">أضف −15 kJ</button></div><div class="formula-box">ΔH الكلي = <b id="hessOut">0 kJ</b></div>`;
+  if(type==="expDaniel")return `<div class="cell-box"><div>Zn<br><b>الأنود</b></div><div class="salt-bridge">جسر ملحي</div><div>Cu<br><b>الكاثود</b></div></div><button class="primary pink" onclick="expDaniel()">شغّل الخلية</button><div id="cellOut" class="formula-box">الإلكترونات تنتقل عند تشغيل الخلية.</div>`;
+  if(type==="expCells")return `<div class="button-row"><button class="choice" onclick="expCells('خلية جلفانية')">جلفانية</button><button class="choice" onclick="expCells('خلية تحليلية')">تحليلية</button></div><div id="cellTypeOut" class="formula-box">اختر نوع الخلية.</div>`;
+  if(type==="expElectrodes")return `<div class="electrode-box"><button class="choice" onclick="expElectrodes('الأنود')">الأنود</button><button class="choice" onclick="expElectrodes('الكاثود')">الكاثود</button></div><div id="electrodeOut" class="concept">حدد موضع الأكسدة والاختزال.</div>`;
+  if(type==="expElectrolysis")return `${S("شدة التيار","50%")} ${S("الزمن","50%")}<div class="gas-production"><div id="prodA"></div><div id="prodB"></div></div>`;
+  if(type==="expRate")return `${S("الزمن","0 s")}<div class="rate-curve"><div id="rateCurve"></div></div><div id="rateOut" class="formula-box">ابدأ الحركة.</div>`;
+  if(type==="expRateFactors")return `<div class="button-row"><button class="choice" onclick="expRateFactors('التركيز')">التركيز</button><button class="choice" onclick="expRateFactors('الحرارة')">درجة الحرارة</button><button class="choice" onclick="expRateFactors('مساحة السطح')">مساحة السطح</button><button class="choice" onclick="expRateFactors('العامل الحفاز')">العامل الحفاز</button></div><div id="factorOut" class="formula-box">اختر عاملًا للمقارنة.</div>`;
+  if(type==="expEquilibrium")return `${S("الزمن","0")}<div class="eq-bars"><div id="reactBar"></div><div id="prodBar"></div></div><div id="eqOut" class="formula-box">راقب الوصول إلى الاتزان.</div>`;
+  if(type==="expLeChatelier")return `<div class="button-row"><button class="choice" onclick="expLeChatelier('زيادة المتفاعل')">زيادة المتفاعل</button><button class="choice" onclick="expLeChatelier('إزالة الناتج')">إزالة الناتج</button><button class="choice" onclick="expLeChatelier('زيادة الضغط')">زيادة الضغط</button></div><div id="leChatOut" class="formula-box">اختر المؤثر.</div>`;
+  if(type==="expIonic")return `${S("تركيز الحمض","50%")}<div class="ion-box"><span>H⁺</span><span>A⁻</span><span>HA</span></div><div id="ionOut" class="formula-box">غيّر التركيز لملاحظة التأين.</div>`;
+  if(type==="expSalt")return `<div class="button-row"><button class="choice" onclick="expSalt('ملح يتفكك إلى أيونات')">ملح أيوني</button><button class="choice" onclick="expSalt('مادة ضعيفة الذوبان')">ذوبانية منخفضة</button></div><div id="saltOut" class="formula-box">اختر العينة.</div>`;
+  if(type==="expKsp")return `${S("تركيز الكاتيون","50%")} ${S("تركيز الأنيون","50%")}<div class="precipitate"><div id="precipitateFill"></div></div><div id="kspOut" class="formula-box">قارن حاصل الأيونات بحاصل الإذابة.</div>`;
+  return `<div class="concept">تجربة استكشافية مرتبطة بموضوع الدرس.</div>`;
+}
+function setExpResult(t){const el=document.getElementById("experimentResult");if(el)el.textContent=t;}
+function expTemp(v){document.getElementById("expValue").textContent=Math.round(25+v*.75)+"°C";document.getElementById("expFill").style.height=(20+v*.7)+"%";setExpResult(v<35?"الحالة أقرب إلى الصلب: حركة الجسيمات أقل.":v<70?"المادة أقرب إلى منطقة تغير الحالة: راقب الطاقة وحركة الجسيمات.":"الطاقة الحركية مرتفعة؛ الحالة الغازية تصبح أكثر احتمالًا.");}
+function expVapor(v){document.getElementById("expValue").textContent=Math.round(25+v*.75)+"°C";setExpResult("عند رفع درجة الحرارة يزداد ميل الجسيمات إلى التبخر، ويزداد ضغط البخار عند الاتزان.");}
+function expPhase(v){setExpResult("موقع المادة على مخطط الطور يعتمد معًا على الضغط ودرجة الحرارة؛ غيّر المؤشرين ولاحظ انتقال المنطقة.");}
+function expGas(v){document.getElementById("expValue").textContent="حجم: "+v+"%";const p=document.querySelector(".piston>div:first-child");if(p)p.style.height=(25+v*.55)+"%";setExpResult("في تجربة الغاز، لاحظ كيف يتغير الضغط أو الحجم عند تثبيت أحد المتغيرات وتغيير الآخر.");}
+function expIdeal(v){const n=(0.2+v/100*0.8).toFixed(2);document.getElementById("expValue").textContent=v+"%";document.getElementById("idealOut").textContent="n ≈ "+n+" (قيمة افتراضية للتجربة)";setExpResult("المعادلة تربط الضغط والحجم ودرجة الحرارة وكمية الغاز في نموذج واحد.");}
+let partialA=0,partialB=0;
+function expPartial(which){which===1?partialA++:partialB++;document.getElementById("gasA").textContent="A: "+partialA;document.getElementById("gasB").textContent="B: "+partialB;setExpResult("الضغط الكلي في النموذج يساوي مجموع الضغوط الجزئية للغازات الموجودة.");}
+function expRealGas(v){document.getElementById("devFill").style.width=v+"%";setExpResult(v<35?"السلوك قريب من النموذج المثالي.":"مع ارتفاع الضغط أو انخفاض درجة الحرارة تزداد أهمية قوى التجاذب وحجم الجسيمات.");}
+function expSolution(v){document.getElementById("expValue").textContent=v+"%";document.getElementById("solFill").style.height=(20+v*.7)+"%";document.getElementById("soluteDots").textContent="•".repeat(Math.max(2,Math.round(2+v/8)));setExpResult("زيادة المذاب مع ثبات كمية المذيب تزيد تركيز المحلول.");}
+function expColligative(v){document.getElementById("expValue").textContent=v+"%";document.getElementById("boilOut").textContent=(100+v*.03).toFixed(1)+"°C";document.getElementById("freezeOut").textContent=(-v*.03).toFixed(1)+"°C";setExpResult("الخواص الجامعة تعتمد على عدد جسيمات المذاب: ارتفاع الغليان وانخفاض التجمد يظهران في اتجاهين متعاكسين.");}
+function expOsmosis(v){document.getElementById("expValue").textContent=v+"%";setExpResult(v<50?"فرق التركيز صغير، لذا يكون انتقال المذيب أقل وضوحًا.":"فرق التركيز أكبر؛ يتحرك المذيب عبر الغشاء نحو الجهة الأعلى تركيزًا في النموذج.");}
+function expColloid(x){setExpResult(x==="غروي"?"الغروي يشتت الضوء بصورة واضحة نسبيًا (تأثير تندال).":x==="معلق"?"المعلق يحتوي جسيمات أكبر ويمكن أن تترسب مع الزمن.":"المحلول الحقيقي لا يُظهر تشتتًا ضوئيًا بالطريقة نفسها.");}
+function expMetalCrystal(v){const g=document.getElementById("metalGrid");if(!g)return;let n=3+Math.round(v/25);g.innerHTML=Array(n*n).fill("●").join(" ");setExpResult("غيّر حجم الشبكة لتصور انتظام الذرات وعدد التناسق في النموذج.");}
+function expIonicCrystal(x){const g=document.getElementById("ionicGrid");if(!g)return;g.innerHTML=Array(25).fill(0).map((_,i)=>(i%2?"−":"+")).join(" ");setExpResult("في الشبكة الأيونية تتجاور الأيونات الموجبة والسالبة بنمط منتظم، ويختلف ترتيب الشبكة باختلاف الأيونات.");}
+function expEnthalpy(x){document.getElementById("thermoFill").style.height=x==="طارد"?"75%":"30%";setExpResult(x==="طارد"?"التفاعل الطارد يطلق طاقة إلى الوسط، فيميل الوسط إلى الارتفاع في درجة الحرارة.":"التفاعل الماص يمتص طاقة من الوسط، فيميل الوسط إلى الانخفاض في درجة الحرارة.");}
+let hess=0;
+function expHess(v){hess+=v;document.getElementById("hessOut").textContent=hess+" kJ";setExpResult("قانون هس يسمح بجمع تغيرات الإنثالبي لمسارات التفاعل للوصول إلى التغير الكلي.");}
+function expDaniel(){document.getElementById("cellOut").textContent="الإلكترونات في خلية دانيال تنتقل في الدائرة الخارجية من قطب الزنك إلى قطب النحاس في النموذج.";setExpResult("الخلية الكهروكيميائية تحول طاقة كيميائية إلى طاقة كهربائية.");}
+function expCells(x){document.getElementById("cellTypeOut").textContent=x==="خلية جلفانية"?"الخلية الجلفانية تولّد تيارًا من تفاعل تلقائي.":"الخلية التحليلية تستخدم طاقة كهربائية لدفع تفاعل غير تلقائي.";setExpResult("قارن اتجاه تحويل الطاقة بين النوعين.");}
+function expElectrodes(x){document.getElementById("electrodeOut").textContent=x==="الأنود"?"الأكسدة تحدث عند الأنود.":"الاختزال يحدث عند الكاثود.";setExpResult("تذكّر: الأنود مرتبط بالأكسدة، والكاثود بالاختزال.");}
+function expElectrolysis(v){document.getElementById("expValue").textContent=v+"%";document.getElementById("prodA").style.height=(20+v*.6)+"%";document.getElementById("prodB").style.height=(15+v*.4)+"%";setExpResult("كمية الكهرباء تعتمد على شدة التيار والزمن؛ زيادة أحدهما في النموذج تزيد الناتج المتوقع.");}
+function expRate(v){document.getElementById("expValue").textContent=v+" s";document.getElementById("rateCurve").style.width=v+"%";document.getElementById("rateOut").textContent="كلما مر الزمن يتغير مقدار المتفاعل؛ شكل المنحنى يساعد على تصور سرعة التفاعل.";setExpResult("راقب ميل المنحنى: الميل الأكبر يعني تغيرًا أسرع في النموذج.");}
+function expRateFactors(x){document.getElementById("factorOut").textContent=x+" يؤثر في سرعة التفاعل عبر تغيير عدد التصادمات الفعالة أو طاقتها وفق طبيعة العامل.";setExpResult("قارن عاملًا واحدًا في كل مرة حتى تستطيع تفسير الفرق.");}
+function expEquilibrium(v){document.getElementById("expValue").textContent=v;document.getElementById("reactBar").style.width=(100-v*.6)+"%";document.getElementById("prodBar").style.width=(20+v*.6)+"%";document.getElementById("eqOut").textContent=v<70?"التفاعل ما زال يتغير.":"التغيرات أصبحت أكثر ثباتًا؛ نقترب من حالة الاتزان.";setExpResult("الاتزان ديناميكي: التفاعلان الأمامي والعكسي يستمران مع ثبات التراكيز الكلية عند الاتزان.");}
+function expLeChatelier(x){document.getElementById("leChatOut").textContent=x+" → سيتجه النظام في النموذج نحو تقليل أثر التغيير للوصول إلى اتزان جديد.";setExpResult("الفكرة ليست إيقاف التفاعل، بل استجابة الاتزان للتغير.");}
+function expIonic(v){document.getElementById("expValue").textContent=v+"%";document.getElementById("ionOut").textContent="في الحمض الضعيف تكون نسبة التأين محدودة، وتتغير مع التركيز والظروف؛ راقب الاتجاه بدل حفظه فقط.";setExpResult("تغيّر التركيز يسمح بملاحظة العلاقة بين كمية الحمض وعدد الأيونات الناتجة.");}
+function expSalt(x){document.getElementById("saltOut").textContent=x;setExpResult("عند ذوبان الملح تتفاعل الأيونات مع جزيئات الماء، ويعتمد السلوك على طبيعة الملح والأيونات.");}
+function expKsp(v){document.getElementById("expValue").textContent=v+"%";document.getElementById("precipitateFill").style.height=v+"%";document.getElementById("kspOut").textContent=v>70?"النموذج يتوقع اقترابًا من بدء الترسيب أو زيادته عند زيادة حاصل الأيونات.":"لا يزال الترسيب أقل وضوحًا في النموذج.";setExpResult("يُستخدم حاصل الأيونات لمقارنة حالة المحلول بحالة الاتزان المرتبطة بحاصل الإذابة.");}
 function dialogue(step,title,d){const lines=[
 ["كيمتشي","بص على السؤال: "+title+"… إيه اللي تقدر تلاحظه بنفسك؟"],
 ["كيمتشي","ممتاز. الفكرة الأساسية هنا مرتبطة بـ "+d[1]+"."],

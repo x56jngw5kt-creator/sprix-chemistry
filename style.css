@@ -27,3 +27,30 @@ main{margin-right:255px;padding-top:72px;min-height:100vh}.hero{min-height:calc(
 .kimchi-avatar{overflow:hidden;background:#dbeeff!important}
 .kimchi-avatar img{width:100%;height:100%;object-fit:cover}
 @media(max-width:850px){.kimchi-stage{grid-template-columns:1fr}.kimchi-character{height:360px}.kimchi-screen{padding:25px}.kimchi-screen h1{font-size:29px}}
+
+/* 26 lesson-specific virtual experiments */
+.experiment-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;margin-top:18px}
+.experiment-top{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}
+.experiment-top h2{margin:0 0 8px}.experiment-top p{color:var(--muted);line-height:1.8;margin:0}
+.experiment-tag{background:#f7eaf4;color:var(--pink);padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900;white-space:nowrap}
+.experiment-area{min-height:220px;margin:20px 0;padding:18px;border:1px dashed #d8d9e5;border-radius:18px;background:#fafbfe}
+.exp-control{display:block;margin:12px 0}.exp-control b{display:block;margin-bottom:7px}.exp-control small{display:block;color:var(--muted);margin-top:5px}
+.exp-tank{height:160px;width:150px;margin:18px auto 0;border:4px solid var(--blue);border-top:0;border-radius:0 0 28px 28px;display:flex;align-items:end;overflow:hidden}
+.exp-steam{width:100%;height:45%;background:linear-gradient(#d7e8ff,#d90083);transition:.3s}
+.particle-box,.gas-chamber,.cell-box,.electrode-box,.ion-box,.two-meters{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;min-height:100px}
+.particle-box span{font-size:28px}.phase-map{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:18px;border-radius:14px;margin-top:10px;background:linear-gradient(90deg,#dce7ff,#fbe2f3)}
+.phase-map b{padding:25px 8px;text-align:center}.piston{height:160px;border:3px solid var(--blue);border-radius:15px;position:relative;overflow:hidden;background:#eef4ff}
+.piston>div:first-child{position:absolute;left:0;right:0;bottom:0;height:52%;background:#d9e6ff;border-top:7px solid var(--pink);transition:.3s}
+.gasDots{position:absolute;inset:25px;line-height:3;color:var(--blue);word-spacing:18px}.formula-box{padding:18px;text-align:center;background:#f6f2f8;border-radius:15px;font-size:18px}
+.button-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.deviation-meter,.rate-curve{height:24px;background:#e8e9f1;border-radius:20px;overflow:hidden;margin:30px 0}
+.deviation-meter div,.rate-curve div{height:100%;width:30%;background:var(--pink);transition:.3s}.solution-beaker{width:150px;height:170px;border:4px solid var(--blue);border-top:0;border-radius:0 0 25px 25px;margin:auto;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.solution-beaker #solFill{position:absolute;bottom:0;left:0;right:0;height:45%;background:#dce7ff;transition:.3s}.solution-beaker span{position:relative;z-index:2;font-size:28px;letter-spacing:8px}
+.two-meters>div{padding:20px;border:1px solid var(--line);border-radius:14px;min-width:150px;text-align:center}.osmosis-box{display:grid;grid-template-columns:1fr 10px 1fr;align-items:center;min-height:130px;text-align:center}
+.membrane{height:120px;background:repeating-linear-gradient(0deg,#d90083 0 5px,#f9d8eb 5px 10px);border-radius:5px}.light-beam{font-size:26px;text-align:center;padding:35px}
+.crystal-grid,.ionic-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-width:420px;margin:auto;font-size:22px;text-align:center}.crystal-grid{color:var(--blue)}
+.ionic-grid{color:var(--pink);background:#f5f6fc;padding:12px;border-radius:12px}.thermometer{height:180px;width:55px;border:4px solid var(--blue);border-radius:30px;margin:auto;display:flex;align-items:end;overflow:hidden}
+.thermometer div{width:100%;height:40%;background:var(--pink);transition:.3s}.cell-box{border:1px solid var(--line);border-radius:18px;padding:20px}.salt-bridge{padding:25px;background:#f5e8f4;border-radius:15px}
+.gas-production{height:160px;display:flex;align-items:end;justify-content:center;gap:30px}.gas-production div{width:55px;background:#d90083;border-radius:18px 18px 5px 5px;height:40%;transition:.3s}
+.eq-bars{display:grid;gap:12px;margin:20px auto;max-width:450px}.eq-bars div{height:30px;border-radius:10px;background:var(--blue);transition:.3s}.eq-bars #prodBar{background:var(--pink)}
+.precipitate{height:150px;width:150px;border:3px solid var(--blue);border-top:0;border-radius:0 0 25px 25px;margin:auto;display:flex;align-items:end;overflow:hidden}.precipitate div{width:100%;height:30%;background:#e7d2a4;transition:.3s}
+@media(max-width:700px){.experiment-top{flex-direction:column}.experiment-tag{white-space:normal}.experiment-area{padding:12px}}
