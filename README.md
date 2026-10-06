@@ -1,8 +1,10 @@
-# SPRIX Chemistry
+SPRIX Chemistry — Self-contained interactive version
 
-نسخة GitHub Pages جاهزة للنشر. تم تضمين صورة شعار SPRIX وصورة كيمتشي داخل ملفات الموقع نفسها، لذلك لن تحتاج إلى رفع مجلد assets منفصل حتى تظهر الصور.
-
-## النشر على GitHub Pages
-1. ارفع الملفات الموجودة داخل هذا المجلد إلى جذر المستودع.
-2. تأكد أن `index.html` و`app.js` و`style.css` في جذر المستودع.
-3. Settings → Pages → Deploy from a branch → main → /(root) → Save.
+- All core images (SPRIX wordmark, ministry logo, Kimchi, Nitcho) are embedded as data URIs in app.js.
+- 26 lesson-specific interactive experiments.
+- 26 embedded MP4 micro-explanations; no external video paths.
+- 25 independent MCQs for every lesson (650 lesson questions).
+- Final review pool of exactly 1000 MCQs; used review questions are stored locally and removed from future review sessions on the same device.
+- Virtual lab with all 118 chemical elements, tools, and an equation-balancing checker for common educational equations.
+- Arabic speech uses the browser/device speech synthesis engine.
+- GitHub Pages ready: upload index.html, app.js and style.css.
