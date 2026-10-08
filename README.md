@@ -8,3 +8,10 @@ SPRIX Chemistry — Self-contained interactive version
 - Virtual lab with all 118 chemical elements, tools, and an equation-balancing checker for common educational equations.
 - Arabic speech uses the browser/device speech synthesis engine.
 - GitHub Pages ready: upload index.html, app.js and style.css.
+
+
+## Gemini integration (Ask Kimchi)
+- `app.js` calls Gemini API from the browser in Ask Kimchi.
+- Paste your key into `GEMINI_API_KEY` in `app.js` before publishing. The key is public on GitHub Pages; monitor quota and rotate it if exposed.
+- `chemistry-book-chunks.json` contains extracted text chunks from Chemistry-Ar-EB-part1.pdf and is searched locally to provide relevant textbook context.
+- Upload `index.html`, `platform.html`, `app.js`, `style.css`, and `chemistry-book-chunks.json` together to the same Pages root.
